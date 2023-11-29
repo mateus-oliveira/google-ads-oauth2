@@ -2,6 +2,7 @@ import os
 import hashlib
 
 from google_auth_oauthlib.flow import Flow
+#from auth.secret import Secret
 
 
 _CLIENT_SECRETS_PATH = os.environ['CLIENT_SECRETS_PATH']
@@ -32,7 +33,7 @@ def authentication():
     }
 
 
-def oauth2callback(passthrough_val, state, code):
+def oauth2callback(passthrough_val, state, code, token):
     if passthrough_val != state:
         message = "State token does not match the expected state."
         raise ValueError(message)
@@ -42,3 +43,6 @@ def oauth2callback(passthrough_val, state, code):
     flow.fetch_token(code=code)
     refresh_token = flow.credentials.refresh_token
     print(f"\nYour refresh token is: {refresh_token}\n")
+
+    #secret = Secret(token)
+    #secret.create_secret_version(refresh_token)

@@ -8,6 +8,8 @@ app.secret_key = "SECRET KEY"
 
 @app.route('/authentication')
 def authentication_endpoint():
+    token = request.args.get("token")
+    session['token'] = token
     auth_info = authentication()
     passthrough_val = auth_info['passthrough_val']
     session['passthrough_val'] = passthrough_val
@@ -17,9 +19,10 @@ def authentication_endpoint():
 
 @app.route('/oauth2callback')
 def oauth2callback_endpoint():
+    token = session['token']
     passthrough_val = session['passthrough_val']
     state = request.args.get("state")
     code = request.args.get("code")
-    oauth2callback(passthrough_val, state, code)
+    oauth2callback(passthrough_val, state, code, token)
 
     return redirect(_CLIENT_URL)
